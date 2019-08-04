@@ -1,7 +1,6 @@
 package com.test2;
 
 import com.facebook.react.ReactActivity;
-// import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;  // <--- Import Package
 
 public class MainActivity extends ReactActivity {
     /**
