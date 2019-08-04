@@ -4,7 +4,6 @@ import PushController from './PushController';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationAndroid from 'react-native-push-notification';
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -61,8 +60,6 @@ export default class App extends Component {
   handleAppStateChange(appState) {
     if (appState === 'background' || 'foreground') {
       let date = new Date(Date.now() + (this.state.hours * 60 *60 *1000) + (this.state.minutes * 60 * 1000) + (this.state.seconds * 1000));
-      //let date = new Date(this.state.datetime);
-      //let date = new Date(Date.now() + (this.state.minutes * 60 *1000));
       if (Platform.OS === 'ios') {
         date = date.toISOString();
       }
