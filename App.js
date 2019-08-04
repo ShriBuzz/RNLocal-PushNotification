@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Picker, AppState, Platform, Button} from 'react-native';
+import { View, Text, StyleSheet, TextInput, AppState, Platform, Button} from 'react-native';
 import PushController from './PushController';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationAndroid from 'react-native-push-notification';
-
+import DatePicker from 'react-native-date-picker';
 
 const styles = StyleSheet.create({
   container: {
@@ -17,22 +17,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
   },
-  timePicker: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
-  picker: {
-    width: 100,
-    marginLeft: 10,
-  },
   submit: {
     marginRight: 30,
     marginTop: 30,
-  },
-  detail:{
-    fontSize: 20,
-    marginLeft: 40,
   },
 });
 
@@ -42,11 +29,10 @@ export default class App extends Component {
 
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     this.state = {
-      seconds: 5,
-      minutes: 0,
-      hours: 0,
       isNotification: false,
       isStopNotification: false,
+      date: new Date(),
+      text: 'Medicine time!'
     };
   }
 
@@ -60,9 +46,9 @@ export default class App extends Component {
 
   handleAppStateChange(appState) {
     if (appState === 'background' || 'foreground') {
-      let date = new Date(Date.now() + (this.state.hours * 60 *60 *1000) + (this.state.minutes * 60 * 1000) + (this.state.seconds * 1000));
-      //let date = new Date(this.state.datetime);
-      //let date = new Date(Date.now() + (this.state.minutes * 60 *1000));
+      //let date = new Date(Date.now() + (this.state.hours * 60 *60 *1000) + (this.state.minutes * 60 * 1000) + (this.state.seconds * 1000));
+      let date = new Date(this.state.date);
+
       if (Platform.OS === 'ios') {
         date = date.toISOString();
       }
@@ -71,7 +57,7 @@ export default class App extends Component {
         if(!this.state.isStopNotification) {
             PushNotification.localNotificationSchedule({
                 foreground: true,
-                message: "Medicine Time",
+                message: this.state.text,
                 date
             });
         }
@@ -115,55 +101,18 @@ export default class App extends Component {
         <Text style={styles.welcome}>
           Choose your notification time.
         </Text>
-
-        <View style={styles.timePicker}>
-          <Text style={styles.detail}>
-            Hours
-          </Text>
-          <Text style={styles.detail}>
-            Minutes
-          </Text>
-          <Text style={styles.detail}>
-            Seconds
-          </Text>
-        </View>
-
-        <View style={styles.timePicker}>
-          <Picker
-            style={styles.picker}
-            selectedValue={this.state.hours}
-            onValueChange={(hours) => this.setState({ hours })}
-          >
-            <Picker.Item label="0" value={0} />
-            <Picker.Item label="1" value={1} />
-            <Picker.Item label="2" value={2} />
-            <Picker.Item label="3" value={3} />
-          </Picker>
-
-          <Picker
-            style={styles.picker}
-            selectedValue={this.state.minutes}
-            onValueChange={(minutes) => this.setState({ minutes })}
-          >
-            <Picker.Item label="0" value={0} />
-            <Picker.Item label="1" value={1} />
-            <Picker.Item label="2" value={2} />
-            <Picker.Item label="3" value={3} />
-            <Picker.Item label="4" value={4} />
-            <Picker.Item label="5" value={5} />
-          </Picker>
-
-          <Picker
-            style={styles.picker}
-            selectedValue={this.state.seconds}
-            onValueChange={(seconds) => this.setState({ seconds })}
-          >
-            <Picker.Item label="5" value={5} />
-            <Picker.Item label="10" value={10} />
-            <Picker.Item label="15" value={15} />
-          </Picker>
-        </View>
-
+        <TextInput
+          placeholder='Title'
+          placeholderTextColor='#afb6b6'
+          autoCapitalize='none'
+          onChangeText={(text) => this.setState({text})}
+          style={{bottom: 5}}
+        />
+        <DatePicker
+          mode= 'datetime'
+          date={this.state.date}
+          onDateChange={date => this.setState({ date })}
+        />
         <View>
             <Button title="Start" onPress={()=>(this.setState({isNotification: true}),this.handleAppStateChange())}/>
             <View style={{marginTop: 30}}>
